@@ -37,12 +37,13 @@ public class Author {
     @Column(columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime updatedTime;
 
-    public Author(String name, String email, String password){
+    public Author(String name, String email, String password, Role role){
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
-    public void updateMember(String name, String password){
+    public void updateAuthor(String name, String password){
         this.name = name;
         this.password = password;
     }

@@ -8,50 +8,72 @@
         #update-form{
             display: none;
         }
+        .pull-right{
+         float: left;
+         margin-right: 10px;
+        }
     </style>
+    <script>
+        function showUpdateForm(){
+            document.getElementById("update-form").style.display = 'block';
+        }
+    </script>
 </head>
 <body>
-<div th:replace="header :: headerFragment"></div>
-<div class="container"><div class="page-header"><h1>회원상세보기</h1></div>
-    <table>
-        <tr>
-            <td>ID</td>
-            <td th:text="${author.id}"></td>
-        </tr>
-        <tr>
-            <td>NAME</td>
-            <td th:text="${author.name}"></td>
-        </tr>
-        <tr>
-            <td>EMAIL</td>
-            <td th:text="${author.email}"></td>
-        </tr>
-        <tr>
-            <td>PASSWORD</td>
-            <td th:text="${author.password}"></td>
-        </tr>
-        <tr>
-            <td>가입일시</td>
-            <td th:text="${author.createdTime}"></td>
-        </tr>
-    </table>
-</div>
-
-    <div class="pull-right">
-        <button class="btn btn-primary" onclick="showUpdateForm()">수정</button>
+    <div th:replace="header :: headerFragment"></div>
+    <div class="container"><div class="page-header"><h1>회원상세보기</h1></div>
+        <table>
+            <tr>
+                <td>ID</td>
+                <td th:text="${author.id}"></td>
+            </tr>
+            <tr>
+                <td>NAME</td>
+                <td th:text="${author.name}"></td>
+            </tr>
+            <tr>
+                <td>EMAIL</td>
+                <td th:text="${author.email}"></td>
+            </tr>
+            <tr>
+                <td>PASSWORD</td>
+                <td th:text="${author.password}"></td>
+            </tr>
+            <tr>
+                <td>ROLE</td>
+                <td th:text="${author.role}"></td>
+            </tr>
+            <tr>
+                <td>가입일시</td>
+                <td th:text="${author.createdTime}"></td>
+            </tr>
+        </table>
+        <div class="pull-right">
+            <button class="btn btn-primary" onclick="showUpdateForm()">수정</button>
+        </div>
+        <div class="pull-right">
+            <a th:href="@{|/author/delete/${author.id}|}" class="btn btn-primary">삭제</a>
+        </div>
     </div>
-<!--    <div class="pull-right">-->
-<!--        <a th:href="@{/author/delete(id=${member.id})}" class="btn btn-primary">삭제</a>-->
-<!--    </div>-->
-
-<!--    <div id="update-form">-->
-<!--        <form action="/member/update" method="POST">-->
-<!--            <p><label>id</label><input type="text" name="id" th:value="${member.id}" readonly></p>-->
-<!--            <p><label>이름</label><input type="text" name="name" th:value="${member.name}"></p>-->
-<!--            <p><label>email</label><input type="text" name="email" th:value="${member.email}" readonly></p>-->
-<!--            <p><label>password</label><input type="password" name="password" th:value="${member.password}"></p>-->
-<!--            <input type="submit" value="수정완료">-->
-<!--        </form>-->
-<!--    </div>-->
+    <br>
+    <div id="update-form" class="mt-4">
+        <form th:action="@{|/author/${author.id}/update/|}" method="POST">
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" class="form-control" name="name" th:value="${author.name}">
+            </div>
+            <div class="form-group">
+                <label for="email">email</label>
+                <input type="text" id="email" class="form-control" name="email" th:value="${author.email}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="password">password</label>
+                <input type="text" id="password" class="form-control" name="password" th:value="${author.password}">
+            </div>
+            <div class="form-group">
+            <button type="submit" class="btn btn-primary mt-2">수정완료</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

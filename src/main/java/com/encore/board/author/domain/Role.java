@@ -1,5 +1,5 @@
 package com.encore.board.author.domain;
 
-enum Role{
+public enum Role{
     ADMIN, USER
 }
