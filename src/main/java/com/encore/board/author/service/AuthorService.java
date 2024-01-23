@@ -53,7 +53,7 @@ public class AuthorService {
     }
 
     public AuthorDetailResDto findAuthorDetail(Long id) throws EntityNotFoundException {
-        Author author = authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("검색하신 ID의 Member가 없습니다."));
+        Author author = this.findById(id);
         String role = null;
         if(author.getRole() == null || author.getRole().equals(Role.USER)){
             role = "일반유저";
