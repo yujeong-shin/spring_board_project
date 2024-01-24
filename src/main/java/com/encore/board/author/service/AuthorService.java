@@ -99,7 +99,9 @@ public class AuthorService {
     public void update(Long id, AuthorUpdateReqDto authorUpdateReqDto) throws EntityNotFoundException {
         Author author = this.findById(id);
         author.updateAuthor(authorUpdateReqDto.getName(), authorUpdateReqDto.getPassword());
-        authorRepository.save(author);
+        //명시적으로 save를 하지 않더라도, JPA의 영속성 컨텍스트를 통해
+        //객체에 변경이 감지(dirty checking)되면, 트랜잭션이 완료되는 시점에 save 동작
+        //authorRepository.save(author);
     }
 
     public void delete(Long id) throws EntityNotFoundException {

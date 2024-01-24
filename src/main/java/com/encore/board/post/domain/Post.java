@@ -27,7 +27,7 @@ public class Post {
     //author_id는 DB의 컬럼명, 별다른 옵션 없는 경우 author의 PK에 FK가 설정
     //DB에서는 Post 테이블에 author_id로 관리, JAVA에서는 author 객체로 관리
     //post 객체 입장에서는 한사람이 여러개 글을 쓸 수 있으므로 N:1
-    @ManyToOne // 관계성 JPA에게 알리기
+    @ManyToOne(fetch = FetchType.LAZY) // 관계성 JPA에게 알리기
     @JoinColumn(name = "author_id")
     //@JoinColumn(nullable=false, name = "author_email", referencedColumnName = "email")
     private Author author;
