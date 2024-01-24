@@ -7,6 +7,7 @@ import com.encore.board.author.dto.AuthorListResDto;
 import com.encore.board.author.dto.AuthorSaveReqDto;
 import com.encore.board.author.dto.AuthorUpdateReqDto;
 import com.encore.board.author.repository.AuthorRepository;
+import com.encore.board.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,11 @@ import java.util.List;
 @Service
 public class AuthorService {
     private final AuthorRepository authorRepository;
+    private final PostRepository postRepository;
     @Autowired
-    public AuthorService(AuthorRepository authorRepository) {
+    public AuthorService(AuthorRepository authorRepository, PostRepository postRepository) {
         this.authorRepository = authorRepository;
+        this.postRepository = postRepository;
     }
 
     public void save(AuthorSaveReqDto authorSaveReqDto) {
@@ -32,6 +35,7 @@ public class AuthorService {
         //일반 생성자 방식
         //Author author = new Author(authorSaveReqDto.getName(), authorSaveReqDto.getEmail(), authorSaveReqDto.getPassword(), role);
 
+
         //빌더패턴
         // .build() : 최종적으로 완성시키는 단계
         Author author = Author.builder()
@@ -39,6 +43,18 @@ public class AuthorService {
                 .name(authorSaveReqDto.getName())
                 .password(authorSaveReqDto.getPassword())
                 .build();
+
+//        //cascade.persist 테스트
+//        //부모 테이블을 통해 자식 테이블에 객체를 동시에 생성
+//        List<Post> posts = new ArrayList<>();
+//        Post post = new Post.builder()
+//                .title("안녕하세요. " + author.getName() + "입니다.")
+//                .contents("반갑습니다. cascade 테스트 중입니다..")
+//                .author(author)
+//                .build();
+//        posts.add(post);
+        //author.setPosts(posts); // setter를 사용하지 않기 위해 Post 생성자에 this.author.getPosts(this);
+
         authorRepository.save(author);
     }
 
@@ -75,6 +91,7 @@ public class AuthorService {
         authorDetailResDto.setEmail(author.getEmail());
         authorDetailResDto.setPassword(author.getPassword());
         authorDetailResDto.setRole(role);
+        authorDetailResDto.setCounts(author.getPosts().size());
         authorDetailResDto.setCreatedTime(author.getCreatedTime());
         return authorDetailResDto;
     }
@@ -90,4 +107,5 @@ public class AuthorService {
         authorRepository.delete(author);
 //        authorRepository.deleteById(id);
     }
+
 }

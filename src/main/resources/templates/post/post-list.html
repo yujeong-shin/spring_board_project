@@ -23,6 +23,7 @@
         <tr>
             <th>id</th>
             <th>title</th>
+            <th>작성자 EMAIL</th>
             <th>#</th>
         </tr>
         </thead>
@@ -30,6 +31,7 @@
         <tr th:each = "post : ${postList}">
             <td th:text="${post.id}"></td>
             <td th:text="${post.title}"></td>
+            <td th:text="${post.author_email}"></td>
             <td><a th:href="@{|/post/detail/${post.id}|}">상세보기</a></td>
         </tr>
         </tbody>

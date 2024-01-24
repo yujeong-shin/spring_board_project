@@ -1,14 +1,13 @@
 package com.encore.board.author.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.encore.board.post.domain.Post;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -36,6 +35,12 @@ public class Author {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    //author를 조회할 때 post 객체가 필요할 시에 선언
+    //mappedBy를 연관관계의 주인을 명시하고, FK를 관리하는 변수명을 명시
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL) //Post 객체에 있는 변수명을 적어 매핑관계 표현
+    private List<Post> posts; // posts 리스트에 post가 생성될 때마다 Post 테이블 가서 생성해줌
+    //AuthorRepository.save만 해줘도 자동으로 PostRepository.save까지 해줌
+
     @CreationTimestamp
     // 개발자가 DB를 바꾸는 게 risky한 것. 프로그램적으로 다루는 것이 좋다.
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -46,11 +51,12 @@ public class Author {
     LocalDateTime updatedTime;
 
 // @Builder // 클래스 단에 붙여주지 않으면 메서드 단에서 설정 가능
-//    public Author(String name, String email, String password, Role role){
+//    public Author(String name, String email, String password, Role role, List<Post> posts) {
 //        this.name = name;
 //        this.email = email;
 //        this.password = password;
 //        this.role = role;
+//        this.posts = posts;
 //    }
 
     public void updateAuthor(String name, String password){

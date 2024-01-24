@@ -11,5 +11,6 @@ public class AuthorDetailResDto {
     private String email;
     private String password;
     private String role;
+    private int counts;
     private LocalDateTime createdTime;
 }

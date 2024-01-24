@@ -1,5 +1,7 @@
 package com.encore.board.post.service;
 
+import com.encore.board.author.domain.Author;
+import com.encore.board.author.repository.AuthorRepository;
 import com.encore.board.post.domain.Post;
 import com.encore.board.post.dto.PostCreateReqDto;
 import com.encore.board.post.dto.PostDetailResDto;
@@ -16,13 +18,20 @@ import java.util.List;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final AuthorRepository authorRepository;
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, AuthorRepository authorRepository) {
         this.postRepository = postRepository;
+        this.authorRepository = authorRepository;
     }
 
     public void save(PostCreateReqDto postCreateReqDto){
-        Post post = new Post(postCreateReqDto.getTitle(), postCreateReqDto.getContents());
+        Author author = authorRepository.findByEmail(postCreateReqDto.getEmail()).orElse(null);
+        Post post = Post.builder()
+                .title(postCreateReqDto.getTitle())
+                .contents(postCreateReqDto.getContents())
+                .author(author)
+                .build();
         postRepository.save(post);
     }
 
@@ -33,6 +42,8 @@ public class PostService {
             PostListResDto postListResDto = new PostListResDto();
             postListResDto.setId(post.getId());
             postListResDto.setTitle(post.getTitle());
+            postListResDto.setAuthor_email(post.getAuthor()==null?"익명유저":post.getAuthor().getEmail());
+//            postListResDto.setAuthor_email(post.getAuthor().getEmail()); //⭐ post객체에 있는 author_id로 Author 테이블에서 꺼내온 autohr 객체
             PostListResDtos.add(postListResDto);
         }
         return PostListResDtos;
