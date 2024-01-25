@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class PostService {
     private final PostRepository postRepository;
     private final AuthorRepository authorRepository;
@@ -32,11 +34,14 @@ public class PostService {
                 .contents(postCreateReqDto.getContents())
                 .author(author)
                 .build();
+
+        //더티체킹 테스트
+        author.updateAuthor("dirty checking test", "1234");
         postRepository.save(post);
     }
 
     public List<PostListResDto> findAll(){
-        List<Post> Posts = postRepository.findAllByOrderByCreatedTimeDesc();
+        List<Post> Posts = postRepository.findAllFetchJoin();
 //        List<Post> Posts = postRepository.findAll();
         List<PostListResDto> PostListResDtos = new ArrayList<>();
         for(Post post : Posts){

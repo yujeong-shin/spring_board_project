@@ -37,6 +37,9 @@ public class Author {
 
     //author를 조회할 때 post 객체가 필요할 시에 선언
     //mappedBy를 연관관계의 주인을 명시하고, FK를 관리하는 변수명을 명시
+    //1:1 관계일 경우 @OneToOne도 존재 (USER-ROLE, USER-USERDETAIL)
+    //연관관계 주인이 아닌 컬럼의 경우, 꼭 posts를 사용하지 않을 겨우 @OneToMany 생략가능. 가져다가 쓸 경우에만 사용
+    //하지만 연관관계 주인인 post 쪽은 @JoinColumn을 꼭 설정해줘야 한다(FK를 걸기 위해). 두 개가 양방향이 아니라는 것
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch=FetchType.LAZY) //Post 객체에 있는 변수명을 적어 매핑관계 표현
     private List<Post> posts; // posts 리스트에 post가 생성될 때마다 Post 테이블 가서 생성해줌
     //AuthorRepository.save만 해줘도 자동으로 PostRepository.save까지 해줌
