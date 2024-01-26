@@ -7,7 +7,7 @@
 </head>
 <body>
     <div th:replace="header :: headerFragment"></div>
-    <div class="container"><div class="page-header"><h1>회원가입</h1></div></div>
+    <div class="container"><div class="page-header"><h1>회원가입</h1></div>
 
     <form action="/author/create" method="POST">
         <div class="form-group">
@@ -33,6 +33,16 @@
         <div class="form-group">
         <button type="submit" class="btn btn-primary mt-3">가입완료</button>
         </div>
+        <div th:if="${errorMessage != null}">
+            <input type="hidden" id="error" th:value="${errorMessage}"/>
+        </div>
     </form>
+    </div>
+<script>
+    let errorMessage = document.getElementById("error").value;
+    if(errorMessage){
+        alert(errorMessage);
+    }
+</script>
 </body>
 </html>

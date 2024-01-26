@@ -23,13 +23,21 @@ public class AuthorController {
 
     @GetMapping("author/create")
     public String authorCreate(){
+        // 에러가 발생한 채로 redirect 된건지, 정상적인 페이지 접근인지 구별해야 함.
         return "author/author-create";
     }
 
     @PostMapping("author/create")
-    public String authorSave(AuthorSaveReqDto authorSaveReqDto){
-        authorService.save(authorSaveReqDto);
-        return "redirect:/author/list";
+    public String authorSave(Model model, AuthorSaveReqDto authorSaveReqDto){
+        try{
+            authorService.save(authorSaveReqDto);
+            return "redirect:/author/list";
+        }catch(IllegalArgumentException e){
+            model.addAttribute("errorMessage", e.getMessage());
+            return "author/author-create";
+            //회원가입 시 에러가 발생하면 redirect말고 화면 넘김.
+            //redirect에는 model에 값을 꽂을 수 없다.
+        }
     }
 
     @GetMapping("author/list")

@@ -26,9 +26,15 @@ public class PostController {
         return "post/post-create";
     }
     @PostMapping("post/create")
-    public String postSave(PostCreateReqDto postCreateReqDto){
-        postService.save(postCreateReqDto);
-        return "redirect:/post/list";
+    public String postSave(Model model, PostCreateReqDto postCreateReqDto){
+        try{
+            postService.save(postCreateReqDto);
+            return "redirect:/post/list";
+        } catch(IllegalArgumentException e){
+            model.addAttribute("errorMessage", e.getMessage());
+            return "post/post-create";
+        }
+
     }
 
     @GetMapping("post/list")
