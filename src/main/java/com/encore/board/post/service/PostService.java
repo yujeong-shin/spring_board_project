@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +31,31 @@ public class PostService {
         this.authorRepository = authorRepository;
     }
 
-    public void save(PostCreateReqDto postCreateReqDto){
+    public void save(PostCreateReqDto postCreateReqDto) throws IllegalArgumentException{
         Author author = authorRepository.findByEmail(postCreateReqDto.getEmail()).orElse(null);
+        LocalDateTime localDateTime = null;
+        String appointment = null;
+        if (postCreateReqDto.getAppointment().equals("Y") &&  //YES인 경우에만 DB에 Y, NO이면 null 세팅
+                !postCreateReqDto.getAppointmentTime().isEmpty()){
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            localDateTime = LocalDateTime.parse(postCreateReqDto.getAppointmentTime() , dateTimeFormatter);
+            LocalDateTime now = LocalDateTime.now();
+            if(localDateTime.isBefore(now)){
+                throw new IllegalArgumentException("시간정보 잘못입력");
+            }
+            appointment = "Y";
+        }
         Post post = Post.builder()
                 .title(postCreateReqDto.getTitle())
                 .contents(postCreateReqDto.getContents())
                 .author(author)
+                .appointment(appointment)
+                .appointmentTime(localDateTime)
                 .build();
+//        더티체킹 테스트
+//        author.updateAuthor("dirty checking test", "1234");
+//        authorRepository.save(author);
 
-        //더티체킹 테스트
-        author.updateAuthor("dirty checking test", "1234");
         postRepository.save(post);
     }
 
@@ -54,6 +71,13 @@ public class PostService {
 //            postListResDto.setAuthor_email(post.getAuthor().getEmail()); //⭐ post객체에 있는 author_id로 Author 테이블에서 꺼내온 autohr 객체
             PostListResDtos.add(postListResDto);
         }
+        return PostListResDtos;
+    }
+
+    public Page<PostListResDto> findByAppointment(Pageable pageable){
+        Page<Post> posts = postRepository.findByAppointment(null, pageable);
+        Page<PostListResDto> PostListResDtos
+                = posts.map(post -> new PostListResDto(post.getId(), post.getTitle(), post.getAuthor()==null?"익명유저":post.getAuthor().getEmail()));
         return PostListResDtos;
     }
 

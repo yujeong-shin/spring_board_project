@@ -33,7 +33,7 @@ public class PostController {
 
     @GetMapping("post/list")
     public String postList(Model model, @PageableDefault(size=5, sort="createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        model.addAttribute("postList", postService.findAllPaging(pageable));
+        model.addAttribute("postList", postService.findByAppointment(pageable));
         return "post/post-list";
     }
 

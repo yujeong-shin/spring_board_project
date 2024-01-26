@@ -22,8 +22,16 @@
                 <input type="text" id="email" class="form-control" name="email">
             </div>
             <div class="form-group">
+                <label>예약여부</label>
+                <input type="radio" id="appointment" name="appointment" value="Y"> YES
+                <input type="radio" style="padding-left: 30px;" name="appointment" value="N" checked="checked"> NO
+                <label>예약시간</label>
+                <input type="datetime-local" id="appointmentTime" name="appointmentTime">
+            </div>
+            <div class="form-group">
             <button type="submit" class="btn btn-primary mt-3">등록하기</button>
             </div>
+
         </form>
     </div>
 </body>

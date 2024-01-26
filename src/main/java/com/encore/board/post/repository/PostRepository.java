@@ -15,6 +15,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     //Pageable 객체 : pageNumber(page=1), page마다 개수(size=10), 정렬(sort=createdTime, desc)
     //Page : List<Post> + 해당 Page의 각종 정보
     Page<Post> findAll(Pageable pageable);
+    //예약여부가 null인 appointment만 조회
+    Page<Post> findByAppointment(String appointment, Pageable pageable);
+
 
     // select p.* from post p left join author a on p.author_id = a.id;
     // 아래 JPQL의 join문은 quthor 객체를 통해 post를 스크리닝(필터링)하고 싶은 상황에 적합

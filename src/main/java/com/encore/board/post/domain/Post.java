@@ -1,10 +1,7 @@
 package com.encore.board.post.domain;
 
 import com.encore.board.author.domain.Author;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -24,6 +21,8 @@ public class Post {
     private String title;
     @Column(nullable = false, length = 3000)
     private String contents;
+    private String appointment;
+    private LocalDateTime appointmentTime;
     //author_id는 DB의 컬럼명, 별다른 옵션 없는 경우 author의 PK에 FK가 설정
     //DB에서는 Post 테이블에 author_id로 관리, JAVA에서는 author 객체로 관리
     //post 객체 입장에서는 한사람이 여러개 글을 쓸 수 있으므로 N:1
@@ -41,15 +40,21 @@ public class Post {
     @Column(columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime updatedTime;
 //    @Builder
-//    public Post(String title, String contents, Author author){
+//    public Post(String title, String contents, Author author, String appointment, LocalDateTime appointmentTime){
 //        this.title = title;
 //        this.contents = contents;
 //        this.author = author;
+//        this.appointment = appointment;
+//        this.appointmentTime = appointmentTime;
 ////        //author 객체의 posts를 초기화 시켜준 후
 ////        this.author.getPosts().add(this);
 //    }
     public void updatePost(String title, String contents){
         this.title = title;
         this.contents = contents;
+    }
+
+    public void updateAppointment(String appointment){
+        this.appointment = appointment;
     }
 }
