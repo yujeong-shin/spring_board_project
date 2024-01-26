@@ -69,7 +69,7 @@ public class AuthorServiceTest {
             System.out.println(author.getId());
         }
         //검증
-        Assertions.assertEquals(2, authorRepository.findAll().size());
+        Assertions.assertEquals(authors.size(), authorRepository.findAll().size());
     }
 
     @Test
