@@ -1,5 +1,6 @@
 package com.encore.board.author.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

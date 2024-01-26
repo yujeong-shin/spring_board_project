@@ -9,6 +9,8 @@ import com.encore.board.post.dto.PostListResDto;
 import com.encore.board.post.dto.PostUpdateReqDto;
 import com.encore.board.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -52,6 +54,13 @@ public class PostService {
 //            postListResDto.setAuthor_email(post.getAuthor().getEmail()); //⭐ post객체에 있는 author_id로 Author 테이블에서 꺼내온 autohr 객체
             PostListResDtos.add(postListResDto);
         }
+        return PostListResDtos;
+    }
+
+    public Page<PostListResDto> findAllPaging(Pageable pageable){
+        Page<Post> posts = postRepository.findAll(pageable);
+        Page<PostListResDto> PostListResDtos
+                = posts.map(post -> new PostListResDto(post.getId(), post.getTitle(), post.getAuthor()==null?"익명유저":post.getAuthor().getEmail()));
         return PostListResDtos;
     }
 
