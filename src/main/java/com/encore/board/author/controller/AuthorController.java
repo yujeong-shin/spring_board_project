@@ -5,6 +5,7 @@ import com.encore.board.author.dto.AuthorDetailResDto;
 import com.encore.board.author.dto.AuthorSaveReqDto;
 import com.encore.board.author.dto.AuthorUpdateReqDto;
 import com.encore.board.author.service.AuthorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Slf4j
 @Controller
 public class AuthorController {
     private final AuthorService authorService;
@@ -34,6 +36,7 @@ public class AuthorController {
             return "redirect:/author/list";
         }catch(IllegalArgumentException e){
             model.addAttribute("errorMessage", e.getMessage());
+            log.error(e.getMessage());
             return "author/author-create";
             //회원가입 시 에러가 발생하면 redirect말고 화면 넘김.
             //redirect에는 model에 값을 꽂을 수 없다.
