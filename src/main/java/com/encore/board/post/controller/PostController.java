@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Slf4j
 @Controller
 public class PostController {
@@ -28,16 +31,20 @@ public class PostController {
         return "post/post-create";
     }
     @PostMapping("post/create")
-    public String postSave(Model model, PostCreateReqDto postCreateReqDto){
+    // Controller 레이어에서는 HttpServletRequest request 주입한 뒤
+    // HttpSession session = request.getSession(); session.getAttribute("email")을 통해 email 값을 꺼낼 수 있다
+    // Service 레이어에서는 Controller에서 객체를 전달해야 사용할 수 있다. 매개변수로 주입 불가능(아마)
+    public String postSave(Model model, PostCreateReqDto postCreateReqDto, HttpSession httpSession){
         try{
-            postService.save(postCreateReqDto);
+            // Service에서 session 받아올 때
+//            postService.save(postCreateReqDto);
+            postService.save(postCreateReqDto, httpSession.getAttribute("email").toString());
             return "redirect:/post/list";
         } catch(IllegalArgumentException e){
             model.addAttribute("errorMessage", e.getMessage());
             log.error(e.getMessage());
             return "post/post-create";
         }
-
     }
 
     @GetMapping("post/list")

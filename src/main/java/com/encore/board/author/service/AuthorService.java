@@ -9,6 +9,7 @@ import com.encore.board.author.dto.AuthorUpdateReqDto;
 import com.encore.board.author.repository.AuthorRepository;
 import com.encore.board.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,11 +19,11 @@ import java.util.List;
 @Service
 public class AuthorService {
     private final AuthorRepository authorRepository;
-    private final PostRepository postRepository;
+    private final PasswordEncoder passwordEncoder;
     @Autowired
-    public AuthorService(AuthorRepository authorRepository, PostRepository postRepository) {
+    public AuthorService(AuthorRepository authorRepository, PasswordEncoder passwordEncoder) {
         this.authorRepository = authorRepository;
-        this.postRepository = postRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void save(AuthorSaveReqDto authorSaveReqDto) throws IllegalArgumentException {
@@ -44,7 +45,8 @@ public class AuthorService {
         Author author = Author.builder()
                 .email(authorSaveReqDto.getEmail())
                 .name(authorSaveReqDto.getName())
-                .password(authorSaveReqDto.getPassword())
+                .password(passwordEncoder.encode(authorSaveReqDto.getPassword()))
+                .role(role)
                 .build();
 
 //        //cascade.persist 테스트
@@ -79,6 +81,11 @@ public class AuthorService {
         Author author = authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("검색하신 ID의 Member가 없습니다."));
         return author;
     }
+
+//    public Author findByEmail(String email) throws EntityNotFoundException{
+//        Author author = authorRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("검색하신 EMAIL의 Member가 없습니다."));
+//        return author;
+//    }
 
     public AuthorDetailResDto findAuthorDetail(Long id) throws EntityNotFoundException {
         Author author = this.findById(id);

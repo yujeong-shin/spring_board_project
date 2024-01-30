@@ -11,6 +11,8 @@ import com.encore.board.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -31,8 +33,12 @@ public class PostService {
         this.authorRepository = authorRepository;
     }
 
-    public void save(PostCreateReqDto postCreateReqDto) throws IllegalArgumentException{
-        Author author = authorRepository.findByEmail(postCreateReqDto.getEmail()).orElse(null);
+    public void save(PostCreateReqDto postCreateReqDto, String email) throws IllegalArgumentException{
+//        // 로그인 된 사용자의 email 값을 받아서 저장
+//        // Controller에서 전달받지 않고, Service 단에서 session 값을 꺼낼 때 사용
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+        Author author = authorRepository.findByEmail(email).orElse(null);
         LocalDateTime localDateTime = null;
         String appointment = null;
         if (postCreateReqDto.getAppointment().equals("Y") &&  //YES인 경우에만 DB에 Y, NO이면 null 세팅
